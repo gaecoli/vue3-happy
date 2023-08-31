@@ -63,7 +63,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .header {
   height: 50px;
   line-height: 50px;
