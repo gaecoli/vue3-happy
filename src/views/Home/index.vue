@@ -23,11 +23,13 @@
 
     <!--2. 访问数据统计 ----------------->
     <div class="content">
-      <div class="time-info" id='box13'>
+      <div class="time-info border" id='box13'>
         <div class="title">月销售额</div>
         <div id="charts" style="width: 100%; height: 300px"></div>
       </div>
-      <div class="area" id="box1">比例分配</div>
+      <div class="area border" id="box1">比例分配
+        <div id="pie" style="width: 100%; height: 300px"></div>
+      </div>
     </div>
 
 
@@ -43,13 +45,16 @@
         <div class="text item">
           <el-row>
             <el-col :span="8">
-              <div>111</div>
+              <div class="title">今日收藏数</div>
+              <div>{{homeOrder.curCollect}}</div>
             </el-col>
             <el-col :span="8">
-              <div>222</div>
+              <div class="title">今日累计金额</div>
+              <div>{{homeOrder.curMoney}}</div>
             </el-col>
             <el-col :span="8">
-              <div>333</div>
+              <div class="title">今日订单数</div>
+              <div>{{homeOrder.curOrderCount}}</div>
             </el-col>
           </el-row>
         </div>
@@ -63,13 +68,16 @@
         <div class="text item">
           <el-row>
             <el-col :span="8">
-              <div>111</div>
+              <div class="title">收藏量</div>
+              <div>{{homeOrder.collect}}</div>
             </el-col>
             <el-col :span="8">
-              <div>222</div>
+              <div class="title">累计金额</div>
+              <div>{{homeOrder.money}}</div>
             </el-col>
             <el-col :span="8">
-              <div>333</div>
+              <div class="title">累计下单量</div>
+              <div>{{homeOrder.orderCount}}</div>
             </el-col>
           </el-row>
         </div>
@@ -92,23 +100,117 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import api from '@/api/index'
 export default {
   setup() {
 
-    let homeInfo = ref({});
+    const homeInfo = ref({});
+    const homeOrder = ref({});
+
     // method 2
     // let homeInfo = reactive({ data: {} })
+    // const echarts = getCurrentInstance().appContext.config.globalProperties.$echarts;
+    const echarts = inject('echarts');
 
     api.getHomeCount().then(res => {
       homeInfo.value = res.data.data.list
       // homeInfo.data = res.data.data.list
     })
 
+    api.getHomeOrder().then(res => {
+      console.log(res)
+      homeOrder.value = res.data.list;
+    })
+
+    api.getHomeFormat().then(res => {
+      let arr = res.data.result.data.sale_money;
+      let xData = [], yData = [], yBarData = [], pieData = [];
+      arr.forEach(ele => {
+        xData.push(ele.name)
+        yData.push(ele.total_amount)
+        yBarData.push(ele.num)
+
+        let obj = {};
+        obj.name = ele.name;
+        obj.value = ele.total_amount;
+        pieData.push(obj)
+      })
+
+      bar(xData, yData, yBarData)
+
+      pie(pieData)
+    })
+
+    const bar = (x, y, yData) => {
+      const myChart = echarts.init(document.getElementById('charts'))
+      const option = {
+        tooltip: {},
+        legend: {
+          show: true,
+          data: ['销售额', '销售量']
+        },
+        xAxis: {
+          data: x
+        },
+        yAxis: {},
+        series: [
+          {
+            name: '销售额',
+            type: 'line',
+            smooth: true,
+            data: y,
+          },
+          {
+            name: '销售量',
+            type: 'bar',
+            data: yData,
+          }
+        ],
+      };
+
+      myChart.setOption(option)
+    }
+
+    const pie = (data) => {
+      const pieChart = echarts.init(document.getElementById('pie'));
+
+      const pieOption = {
+        title: {
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left'
+        },
+        series: [
+          {
+            name: '销售品类',
+            type: 'pie',
+            radius: '50%',
+            data: data,
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      };
+
+      pieChart.setOption(pieOption)
+    }
+
+
+
 
     return {
-      homeInfo
+      homeInfo,
+      homeOrder
     }
   }
 }
@@ -121,7 +223,6 @@ export default {
 
 .header {
   display: flex;
-  padding-right: 30px;
 
   .item {
     flex: 1;
@@ -133,7 +234,6 @@ export default {
     margin-right: 20px;
     font-weight: bold;
     color: #fff;
-    // text-align: center;
     position: relative;
 
     .num {
@@ -172,6 +272,10 @@ export default {
 }
 
 // 图表
+.border {
+  border: 1px solid #eee;
+  background: #eee;
+}
 
 .content {
   margin: 20px;
@@ -206,6 +310,11 @@ export default {
     span {
       font-weight: 600;
     }
+  }
+
+  .title{
+    margin-bottom: 10px;
+    font-size: 14px;
   }
 }
 </style>

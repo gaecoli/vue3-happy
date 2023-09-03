@@ -7,6 +7,7 @@ import Home from '@/views/Home';
 const Goods =  () => import('@/views/Goods');
 const GoodsList = () => import('@/views/Goods/GoodsList.vue');
 const Category = () => import ('@/views/Goods/GoodsCategory.vue');
+const AddGoods = () => import('@/views/Goods/AddGoods.vue');
 
 const routes = [
   {
@@ -31,6 +32,11 @@ const routes = [
             path: 'category',
             name: 'category',
             component: Category,
+          },
+          {
+            path: 'addgoods',
+            name: 'addgoods',
+            component: AddGoods,
           }
         ]
       }

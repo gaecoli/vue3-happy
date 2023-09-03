@@ -36,7 +36,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .menu {
   position: fixed;
   left: 0;
