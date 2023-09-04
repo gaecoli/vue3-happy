@@ -1,24 +1,29 @@
 # vue3-first
 
-## Project setup
+## 前端项目启动
 ```
+git clone git@github.com:gaecoli/vue3-happy.git
+cd vue3-happy
 npm install
-```
-
-### Compiles and hot-reloads for development
-```
 npm run serve
 ```
 
-### Compiles and minifies for production
+## node 项目启动
+### sql 导入：
 ```
-npm run build
+create database ego;
+
+mysql -u root -p ego < vue3-happy/server/ego.sql
+
 ```
 
-### Lints and fixes files
+### node 后端项目启动
 ```
-npm run lint
+cd vue3-happy
+cd server
+node index.js
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### License
+MIT
