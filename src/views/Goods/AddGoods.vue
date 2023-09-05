@@ -30,9 +30,9 @@
               <el-form-item label="商品卖点" prop="sellPoint">
                 <el-input v-model="goodsForm.sellPoint"></el-input>
               </el-form-item>
-<!--              <el-form-item label="上传图片" prop="image">-->
-<!--                <GoodsUpload @sendImage="sendImage" :fileList="fileList"></GoodsUpload>-->
-<!--              </el-form-item>-->
+              <el-form-item label="上传图片" prop="image">
+                <GoodsUpload @sendImage="sendImage" :fileList="fileList"></GoodsUpload>
+              </el-form-item>
 <!--              <el-form-item label="商品描述" prop="descs">-->
 <!--                <WangEditor @sendEditor="sendEditor" ref="myEditor"></WangEditor>-->
 <!--              </el-form-item>-->
@@ -60,8 +60,9 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import GoodsTree from './GoodsTree.vue';
+import GoodsUpload from './GoodsUpload.vue';
 
 const goodsForm = reactive({
   cid: '',
@@ -77,6 +78,7 @@ const goodsForm = reactive({
   shelves: true,//商品上架
 });
 
+const fileList = ref([]);
 
 const goods = reactive({});
 
@@ -104,6 +106,12 @@ const rules = reactive({
 
 const changeTree = (node) => {
   console.log('click-node', node)
+  goodsForm.cid = node.cid;
+  goodsForm.category = node.name;
+}
+
+const sendImage = (imgPath) => {
+  goodsForm.image.push(imgPath)
 }
 
 </script>

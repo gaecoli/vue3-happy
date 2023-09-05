@@ -3,7 +3,6 @@
 </template>
 
 <script setup>
-import { defineEmits } from 'vue';
 import api from '@/api'
 
 const emit = defineEmits(['changeTree'])

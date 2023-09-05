@@ -29,7 +29,7 @@ const base = {
     getAdvertlist:"",
 }
 
-export const host='http://localhost:9988'
+export const host='http://localhost:6688'
 
 //导出图片地址
 export const upload='/api/upload'
